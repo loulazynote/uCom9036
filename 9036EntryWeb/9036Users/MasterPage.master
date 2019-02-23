@@ -1,0 +1,342 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- Web Fonts  -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+       <link href="stylesheets/font-awesome.css" rel="stylesheet" />
+    <link href="stylesheets/build.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" />
+
+    <link href="/vendor/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/stylesheets/theme.css" />
+
+    <!-- Skin CSS -->
+    <link rel="stylesheet" href="/stylesheets/skins/default.css" />
+
+    <!-- Head Libs -->
+    <script src="/vendor/modernizr/modernizr.js"></script>
+    <script src="/scripts/jquery-3.3.1.js"></script>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- start: header -->
+        <header class="header">
+            <div class="logo-container">
+                <asp:HyperLink ID="HyperLink1" HavigateUrl="~/index.aspx" runat="server" class="logo">
+                    <asp:Image ID="Image1" runat="server" ImageUrl="~/images/Logo2.png" Height="40" />
+                </asp:HyperLink>
+                <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
+            </div>
+
+            <!-- start: search & user box -->
+            <div class="header-right">
+
+                <%--  <form action="pages-search-results.html" class="search nav-form">
+                <div class="input-group input-search">
+                    <input type="text" class="form-control" name="q" id="q" placeholder="Search...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </form>--%>
+
+                <%--user box--%>
+                <span class="separator"></span>
+
+                <div id="userbox" class="userbox">
+                    <a href="#" data-toggle="dropdown">
+                        <figure class="profile-picture">
+                            <asp:Image ID="Image2" runat="server" ImageUrl="~/images/user-circle-solid.svg" class="img-circle" data-lock-picture="images/user-circle-solid.svg" />
+                            <%--<img src="" alt="member" class="img-circle" data-lock-picture="images/user-circle-solid.svg" />--%>
+                        </figure>
+                        <div class="profile-info">
+                            <asp:Label ID="Label1" runat="server" class="name" Text=""></asp:Label>
+                            <asp:Label ID="Label2" runat="server" class="role" Text=""></asp:Label>
+                        </div>
+
+                        <i class="fa custom-caret"></i>
+                    </a>
+
+                    <div class="dropdown-menu">
+                        <ul class="list-unstyled">
+                            <li class="divider"></li>
+                            <li>
+                                <asp:LinkButton ID="LinkButton1" role="menuitem" TabIndex="-1" runat="server" OnClick="LinkButton1_Click"><i class="fa fa-user"></i>My Profile</asp:LinkButton>
+                            </li>
+                            <li>
+                                <asp:LinkButton ID="LinkButton2" role="menuitem" TabIndex="-1" runat="server" OnClick="LinkButton2_Click"><i class="fa fa-power-off"></i>Logout</asp:LinkButton>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- end: search & user box -->
+        <div class="inner-wrapper">
+            <!-- start: sidebar -->
+            <aside id="sidebar-left" class="sidebar-left">
+
+                <div class="sidebar-header">
+                    <div class="sidebar-title">
+                    </div>
+                    <div class="sidebar-toggle hidden-xs" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
+                        <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                    </div>
+                </div>
+                <div class="nano">
+                    <div class="nano-content">
+                        <nav id="menu" class="nav-main" role="navigation">
+                            <ul id="sidemain" class="nav nav-main">
+                                <li class="nav-active">
+                                    <asp:HyperLink ID="index" runat="server" NavigateUrl="~/Joshua/Bulletin_MasterPage_user.aspx">
+                                        <i class="fa fa-home" aria-hidden="true"></i>
+                                        <span>Home</span>
+                                    </asp:HyperLink>
+                                </li>
+
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-user" aria-hidden="true"></i>
+                                        <span>員工管理</span>
+                                    </asp:HyperLink>
+                                    <ul id="Emp" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/Tanner/Index.aspx" runat="server">員工資料管理</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-user-friends" aria-hidden="true"></i>
+                                        <span>客戶管理</span>
+                                    </asp:HyperLink>
+                                    <ul id="Ctm" class="nav nav-children">
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                                        <span>會議工作</span>
+                                    </asp:HyperLink>
+                                    <ul id="Mt" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/Ansel/Default.aspx" runat="server">會議總覽</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/Ansel/ApplicationStatus.aspx" runat="server">會議審核</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                        <span>假務系統</span>
+                                    </asp:HyperLink>
+                                    <ul id="Lve" class="nav nav-children">
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-warehouse" aria-hidden="true"></i>
+                                        <span>器材租借系統</span>
+                                    </asp:HyperLink>
+                                    <ul id="Wah" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/EquipmentRentSystem/Index.aspx" runat="server">器材租借管理</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-gifts" aria-hidden="true"></i>
+                                        <span>團購系統</span>
+                                    </asp:HyperLink>
+                                    <ul id="Wlf" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/9036GroupBuy/Default.aspx" runat="server">團單總覽</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-comment-alt" aria-hidden="true"></i>
+                                        <span>討論區</span>
+                                    </asp:HyperLink>
+                                    <ul id="FBack" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/Yoyo/List(Users).aspx" runat="server">討論區</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fas fa-comments" aria-hidden="true"></i>
+                                        <span>社交社群</span>
+                                    </asp:HyperLink>
+                                    <ul id="Cmt" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/Louis/Group.aspx" runat="server">社群</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-parent">
+                                    <asp:HyperLink runat="server">
+                                        <i class="fab fa-creative-commons-by" aria-hidden="true"></i>
+                                        <span>聯誼系統</span>
+                                    </asp:HyperLink>
+                                    <ul id="chichi" class="nav nav-children">
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/admin_chichi/Default.aspx" runat="server">主頁</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/admin_chichi/GenTable.aspx" runat="server">審核參與者</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/admin_chichi/CheckResult.aspx" runat="server">檢視約會狀況</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/User_chichi/Timelify.aspx" runat="server">留言板</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink NavigateUrl="~/User_chichi/Statistic.aspx" runat="server">統計區</asp:HyperLink>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <hr class="separator" />
+                    </div>
+                </div>
+            </aside>
+            <!-- end: sidebar -->
+
+            <%--Start: sidemap--%>
+            <section role="main" class="content-body">
+                <header class="page-header">
+                    <h2>首頁</h2>
+
+                    <%--<div class="right-wrapper pull-right">
+                        <ol class="breadcrumbs">
+                            <li>
+                                <a href="index.aspx">
+                                    <i class="fa fa-home"></i>
+                                </a>
+                            </li>
+                            <li><span>Main</span></li>
+                        </ol>
+                        <a class="sidebar-right-toggle" data-open="sidebar-right"></a>
+                    </div>--%>
+                </header>
+                <div>
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </section>
+            <%--End: Sidemap--%>
+        </div>
+        <asp:HiddenField ID="HiddenField1" runat="server" />
+        <asp:HiddenField ID="HiddenField2" runat="server" />
+        <asp:HiddenField ID="HiddenField3" runat="server" />
+    </form>
+
+    <!-- Vendor -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/vendor/nanoscroller/nanoscroller.js"></script>
+    <script src="/scripts/sweetalert2.min.js"></script>
+
+    <!-- Theme Base, Components and Settings -->
+    <script src="/scripts/theme.js"></script>
+
+    <script>
+        var lv = $("#HiddenField1").val();//權限層級
+        var gn = $("#HiddenField2").val();//性別判定
+        $(function () {
+            //var ADemp = $(`<li><asp:HyperLink NavigateUrl="~/Tanner/Index.aspx" runat="server">新增員工資料</asp:HyperLink></li>
+            //                   <li><asp:HyperLink NavigateUrl="~/Tanner/Edit.aspx" runat="server">修改員工資料</asp:HyperLink></li>`);
+            var ADctm = $(`<li><asp:HyperLink NavigateUrl="~/changen/DefaultadMaster.aspx" runat="server">公司客戶總清單</asp:HyperLink></li>
+                           <li><asp:HyperLink NavigateUrl="~/changen/TeamMenberMaster.aspx" runat="server">業務員業績總表</asp:HyperLink></li>
+                           <li><asp:HyperLink NavigateUrl="~/changen/FullCalendarAdminMaster.aspx" runat="server">查看業務行程表</asp:HyperLink></li>
+                           <li><asp:HyperLink NavigateUrl="~/changen/NewCusAdminMaster.aspx" runat="server">新客戶名單</asp:HyperLink></li>
+                           <li><asp:HyperLink NavigateUrl="~/changen/EditMaster.aspx" runat="server">新增客戶</asp:HyperLink></li>`);
+            var ADmt = $(`<li><asp:HyperLink NavigateUrl="~/Ansel/NewConference.aspx" runat="server">新增會議</asp:HyperLink></li>`);
+            var ADfback = $(`<li><asp:HyperLink NavigateUrl="~/Yoyo/List(admin).aspx" runat="server">討論區管理</asp:HyperLink></li>
+<li><asp:HyperLink NavigateUrl="~/Yoyo/Chart.aspx" runat="server">討論區相關數據</asp:HyperLink></li>`);
+            var ADlve = $(`<li><asp:HyperLink NavigateUrl="~/NewPP/Manger.aspx" runat="server">請假申請管理</asp:HyperLink></li>
+                           <li><asp:HyperLink NavigateUrl="~/NewPP/ReView.aspx" runat="server">請假審核</asp:HyperLink></li>
+                           <li><asp:HyperLink NavigateUrl="~/NewPP/Chart.aspx" runat="server">請假查詢</asp:HyperLink></li>`);
+            var ADfds = $(`<li><asp:HyperLink NavigateUrl="~/ChiChi/admin.aspx" runat="server">聯誼系統管理</asp:HyperLink></li>`);
+            //var ADindex = $(`<li><asp:HyperLink NavigateUrl="~/Joshua/Bulletin_MasterPage.aspx" runat="server">Home</asp:HyperLink></li>`);
+
+            switch (lv) {
+                case "1"://管理者
+
+                    //var AD = $(`<li class="nav-active">
+                    //               <asp:HyperLink runat="server" NavigateUrl="~/Louis/Permission.aspx">
+                    //                   <i class="fas fa-tools" aria-hidden="true"></i>
+                    //                    <span>權限管理</span>
+                    //                </asp:HyperLink>
+                    //            </li>`)
+                    $("#<%=index.ClientID%>").attr("href", "/Joshua/Bulletin_MasterPage.aspx")
+                    //$("#Emp").append(ADemp);
+                    $("#Ctm").append(ADctm);
+                    //$("#Wah").append(ADwah);
+                    $("#Mt").append(ADmt);
+                    $("#Lve").append(ADlve);
+                    $("#Fds").append(ADfds);
+                    $("#FBack").append(ADfback);
+                    //$("#sidemain").append(AD);
+                    break;
+
+                case "2"://部門管理者
+                    $("#Mt").append(ADmt);
+                    $("#Ctm").append(ADctm);
+                    //if (gn == 1) {
+                    //    var UsBoy = $(`<li><asp:HyperLink NavigateUrl="~/ChiChi/sortableForMan.aspx" runat="server">聯誼活動</asp:HyperLink></li>`);
+                    //    $("#Fds").append(UsBoy);
+                    //} else {
+                    //    var UsGirl = $(`<li><asp:HyperLink NavigateUrl="~/ChiChi/sortableForWoman.aspx" runat="server">聯誼活動</asp:HyperLink></li>`);
+                    //    $("#Fds").append(UsGirl);
+                    //}
+                    break;
+                default://一般使用者
+                    var Usctm = $(`<li><asp:HyperLink NavigateUrl="~/changen/DefaultMaster.aspx" runat="server">公司客戶總清單</asp:HyperLink></li>
+                                   <li><asp:HyperLink NavigateUrl="~/changen/SalelistMaster.aspx" runat="server">我的目標客戶</asp:HyperLink></li>
+                                   <li><asp:HyperLink NavigateUrl="~/changen/FullCalendarMaster.aspx" runat="server">我的行事曆</asp:HyperLink></li>`);
+                    var Uslve = $(`<li><asp:HyperLink NavigateUrl="~/NewPP/Employess.aspx" runat="server">請假申請</asp:HyperLink></li>`);
+                    $("#Ctm").append(Usctm);
+                    $("#Lve").append(Uslve);
+                    //if (gn == 1) {
+                    //    var UsBoy = $(`<li><asp:HyperLink NavigateUrl="~/ChiChi/sortableForMan.aspx" runat="server">聯誼活動</asp:HyperLink></li>`);
+                    //    $("#Fds").append(UsBoy);
+                    //} else {
+                    //    var UsGirl = $(`<li><asp:HyperLink NavigateUrl="~/ChiChi/sortableForWoman.aspx" runat="server">聯誼活動</asp:HyperLink></li>`);
+                    //    $("#Fds").append(UsGirl);
+                    //}
+                    break;
+            }
+        });
+    </script>
+
+    <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+    </asp:ContentPlaceHolder>
+</body>
+</html>

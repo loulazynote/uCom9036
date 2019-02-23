@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5f4bbf33d6bf459eb57f4765a88f6571" Name="Diagram1">
+        <EntityTypeShape EntityType="Entry9036Model.Bulletin" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Entry9036Model.Community" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Entry9036Model.Message" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Entry9036Model.Conference" Width="1.5" PointX="3.75" PointY="3.5" />
+        <EntityTypeShape EntityType="Entry9036Model.Department" Width="1.5" PointX="0.75" PointY="5.5" />
+        <EntityTypeShape EntityType="Entry9036Model.Employee" Width="1.5" PointX="5.75" PointY="3.5" />
+        <EntityTypeShape EntityType="Entry9036Model.EquipmentRentLog" Width="1.5" PointX="7.75" PointY="0.5" />
+        <EntityTypeShape EntityType="Entry9036Model.Equipment" Width="1.5" PointX="7.75" PointY="3.5" />
+        <EntityTypeShape EntityType="Entry9036Model.EquipmentType" Width="1.5" PointX="7.75" PointY="7.5" />
+        <EntityTypeShape EntityType="Entry9036Model.Role" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Entry9036Model.Customer" Width="1.5" PointX="3.375" PointY="8.75" />
+        <EntityTypeShape EntityType="Entry9036Model.Evaluation" Width="1.5" PointX="5.375" PointY="9.75" />
+        <EntityTypeShape EntityType="Entry9036Model.Fullevent" Width="1.5" PointX="7.375" PointY="9.75" />
+        <EntityTypeShape EntityType="Entry9036Model.Orderinformation" Width="1.5" PointX="9.375" PointY="9.75" />
+        <EntityTypeShape EntityType="Entry9036Model.Sale" Width="1.5" PointX="10.375" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

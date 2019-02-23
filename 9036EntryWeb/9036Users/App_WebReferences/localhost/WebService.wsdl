@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetColor">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetColorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetColorResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTeamList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="keyword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTeamListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTeamListResult" type="tns:ArrayOfTeamMenberList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfTeamMenberList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TeamMenberList" nillable="true" type="tns:TeamMenberList" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TeamMenberList">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="SaleID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SaleName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderAmount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderDate" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetColorSoapIn">
+    <wsdl:part name="parameters" element="tns:GetColor" />
+  </wsdl:message>
+  <wsdl:message name="GetColorSoapOut">
+    <wsdl:part name="parameters" element="tns:GetColorResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTeamListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTeamList" />
+  </wsdl:message>
+  <wsdl:message name="GetTeamListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTeamListResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="GetColor">
+      <wsdl:input message="tns:GetColorSoapIn" />
+      <wsdl:output message="tns:GetColorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTeamList">
+      <wsdl:input message="tns:GetTeamListSoapIn" />
+      <wsdl:output message="tns:GetTeamListSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetColor">
+      <soap:operation soapAction="http://tempuri.org/GetColor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTeamList">
+      <soap:operation soapAction="http://tempuri.org/GetTeamList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetColor">
+      <soap12:operation soapAction="http://tempuri.org/GetColor" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTeamList">
+      <soap12:operation soapAction="http://tempuri.org/GetTeamList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="http://localhost:61305/changen/WebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="http://localhost:61305/changen/WebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

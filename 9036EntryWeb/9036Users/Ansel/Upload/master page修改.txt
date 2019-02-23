@@ -1,0 +1,18 @@
+一、
+<li class="nav-parent">
+   <asp:HyperLink runat="server">
+       <i class="fas fa-comment-dots" aria-hidden="true"></i>
+       <span>會議工作</span>
+    </asp:HyperLink>
+       <ul id="Mt" class="nav nav-children">
+           <li>
+               <asp:HyperLink NavigateUrl="~/Ansel/Default.aspx" runat="server" >會議總覽</asp:HyperLink>  //修改這裡
+           </li>
+       </ul>
+</li>
+
+
+
+二、
+var ADmt = $(`<li><asp:HyperLink NavigateUrl="~/Ansel/NewConference.aspx" runat="server">新增會議</asp:HyperLink></li>  //此頁僅有管理者可瀏覽 RoleID == 1 && 2
+              <li><asp:HyperLink NavigateUrl="~/Ansel/ApplicationStatus.aspx" runat="server">會議審核</asp:HyperLink></li>`); //此頁所有人皆可瀏覽

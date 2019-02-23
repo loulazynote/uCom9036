@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  <siteMapNode url="~/User_chichi/Default_mine.aspx" title="首頁"  description="首頁...">
+    
+    <!--管理者-->
+    <siteMapNode url="" title="管理者功能" roles="admin">    
+      <siteMapNode url="~/admin/GenTable.aspx" title="審核參與者" description="審核參與者..."> </siteMapNode>
+      <siteMapNode url="~/admin/CheckResult.aspx" title="檢視約會狀況" description="檢視約會狀況..."> </siteMapNode>
+    </siteMapNode>
+    
+    <!--女性-->
+    <siteMapNode url="" title="女士專區" roles="woman">
+      <siteMapNode url="~/User_chichi/GotoUploadPic_woman.aspx" title="上傳生活照" description="上傳生活照..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/UpdateInformationWoman.aspx" title="個人基本資訊" description="個人基本資訊..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/ManInformation.aspx" title="閱覽男士資訊" description="閱覽男士資訊..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/sortableForWoman.aspx" title="女客戶排序區" description="女客戶排序區..."> </siteMapNode>      
+      <siteMapNode url="~/User_chichi/AcceptDating.aspx" title="接收邀約" description="接收邀約..."> </siteMapNode>
+    </siteMapNode>
+
+    <!--男性-->
+    <siteMapNode url="" title="男士專區" roles="man">
+      <siteMapNode url="~/User_chichi/GotoUploadPic.aspx" title="上傳生活照" description="上傳生活照..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/UpdateInformation.aspx" title="個人基本資訊" description="個人基本資訊..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/WomanInformation.aspx" title="閱覽女士資訊" description="閱覽女士資訊..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/sortableForMan.aspx" title="男客戶排序區" description="男客戶排序區..."> </siteMapNode>          
+      <siteMapNode url="~/User_chichi/DatingPlace.aspx" title="發送邀約" description="發送邀約..."> </siteMapNode>
+    </siteMapNode>
+
+    <!--公用區-->
+    <siteMapNode url="" title="公用區" roles="admin,woman,man">
+      <siteMapNode url="~/User_chichi/Timelify.aspx" title="留言板" description="留言板..."> </siteMapNode>
+      <siteMapNode url="~/User_chichi/Statistic.aspx" title="統計區" description="統計區..."> </siteMapNode>
+    </siteMapNode>
+
+    <siteMapNode url="~/User_chichi/Logout.aspx" title="登出" ></siteMapNode>
+  </siteMapNode>
+
+</siteMap>
+

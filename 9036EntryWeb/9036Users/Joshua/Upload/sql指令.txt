@@ -1,0 +1,15 @@
+select * from Bulletin WHERE 1=1 AND description like '%OO%' 
+AND category = 'A' 
+
+select * from Bulletin WHERE Title = '缺碘危害知多少 北榮快速檢驗 一"碘"都不少'
+
+select * from Bulletin WHERE Title like '%%'
+
+select * from Bulletin WHERE category = 'A'
+
+select * from Bulletin WHERE Title = ' 107年臨時門診作業要點暨預排檢查(驗)彙整表(院內KM網路)'
+
+select * from Bulletin t1 WHERE 1=1 AND t1.Category = "A"
+
+
+select * from Bulletin WHERE Id=2

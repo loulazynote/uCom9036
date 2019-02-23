@@ -1,0 +1,16 @@
+full calender
+sweet alert2
+boostrap3.4
+*Ajax 至少一項用到
+
+
+
+
+
+
+2.附件讀檔 
+3.寄信通知
+4.首頁 刪除 修改功能
+5.權限設定 
+7.美化
+8.匯出

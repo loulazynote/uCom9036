@@ -1,0 +1,15 @@
+CREATE TABLE [dbo].[Bulletin] (
+    [Id]          INT           IDENTITY (1, 1) NOT NULL,
+    [Title]       NVARCHAR (50) NULL,
+    [Date]        DATETIME      NULL,
+    [Description] NVARCHAR (50) NULL,
+    [Announcer]   NVARCHAR (50) NULL,
+    [Department]  NVARCHAR (50) NULL,
+    [View]        INT           NULL,
+    [Category]    NVARCHAR (50) NULL,
+    [FileUpload]  NVARCHAR (50) NULL,
+    [TopPost]     INT           NULL,
+    [Download]    NVARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+

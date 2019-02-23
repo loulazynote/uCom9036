@@ -1,0 +1,553 @@
+<%@ Page Language="C#" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Web.Configuration" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Security.Permissions" %>
+
+
+<!DOCTYPE html>
+
+<script runat="server"> 
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!Page.IsPostBack)
+        {
+            BindListView();
+        }
+    }
+
+    private void BindListView()
+    {
+        SqlDataAdapter da = new SqlDataAdapter(
+       "select * from Bulletin order by TopPost DESC", WebConfigurationManager.ConnectionStrings
+      ["JoshuaDB"].ConnectionString);
+
+        //        SqlDataAdapter da = new SqlDataAdapter(
+        //"select * from Bulletin order by Date DESC", WebConfigurationManager.ConnectionStrings
+        //["JoshuaDB"].ConnectionString);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+        ListView1.DataSource = dt;
+        ListView1.DataBind();
+
+
+        //query string
+        string title = Request.QueryString["title"];
+        string content = Request.QueryString["content"];
+        string category = Request.QueryString["category"];
+        //Response.Write(title + content + category);
+
+        //select * from Bulletin where 1 and title like ' %ABC% 
+        string sqlCondition = "";
+        if (title != null)
+        {
+            sqlCondition += " AND title like N'%" + title + "%'"; //AND Title like N'%北%'
+        }
+        if (content != null)
+        {
+            sqlCondition += " AND description like '%" + content + "%'";
+        }
+        if (category != null)
+        {
+            sqlCondition += " AND category ='" + category + "'";
+        }
+
+        //Response.Write(sqlCondition);
+
+        //        SqlDataAdapter da2 = new SqlDataAdapter(
+        //"select * from Bulletin WHERE 1=1" + sqlCondition , WebConfigurationManager.ConnectionStrings
+        //["JoshuaDB"].ConnectionString);
+
+        var sqlString = "select * from Bulletin WHERE 1=1" + sqlCondition + "order by TopPost DESC";
+
+        SqlDataAdapter da2 = new SqlDataAdapter(
+sqlString, WebConfigurationManager.ConnectionStrings
+["JoshuaDB"].ConnectionString);
+
+        //Response.Write(sql);
+
+        DataTable dt2 = new DataTable();
+        da2.Fill(dt2);
+        ListView1.DataSource = dt2;
+        ListView1.DataBind();
+
+    }
+
+    protected void ListView1_ItemDeleting(object sender, ListViewDeleteEventArgs e)
+    {
+        //Response.Write(e.Keys[0].ToString());
+        int id = (int)e.Keys[0];
+        SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["JoshuaDB"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("DELETE FROM Bulletin WHERE (Id = @Id)", cn);
+        cmd.Parameters.AddWithValue("@Id", id);
+        cn.Open();
+        cmd.ExecuteNonQuery();
+        cn.Close();
+        Response.Redirect("~/Default_withViewColumn.aspx");
+    }
+
+
+    protected void ListView1_ItemCommand(object sender, ListViewCommandEventArgs e)
+    {
+        if (e.CommandName == "Cancel")
+        {
+            Response.Redirect("~/Default_withViewColumn.aspx");
+        }
+    }
+
+    protected void ListView1_ItemUpdating1(object sender, ListViewUpdateEventArgs e)
+    {
+        int id = (int)e.Keys[0];
+
+        string title = e.NewValues[0].ToString();
+        string description = e.NewValues[1].ToString();
+        string category = e.NewValues[2].ToString();
+
+
+        SqlConnection cn = new SqlConnection(
+    WebConfigurationManager.ConnectionStrings["JoshuaDB"].ConnectionString);
+
+        SqlCommand cmd = new SqlCommand(
+            "UPDATE [Bulletin] SET [Title] = @Title, [Description] = @Description, [Category] = @Category WHERE [Id] = @Id", cn);
+
+        cmd.Parameters.AddWithValue("@Id", id);
+        cmd.Parameters.AddWithValue("Title", title);
+        cmd.Parameters.AddWithValue("Description", description);
+        cmd.Parameters.AddWithValue("Category", category);
+
+        cn.Open();
+        cmd.ExecuteNonQuery();
+        cn.Close();
+
+        Response.Redirect("~/Default_withViewColumn.aspx");
+    }
+
+    protected void ListView1_ItemEditing(object sender, ListViewEditEventArgs e)
+    {
+
+    }
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/Edit_yoyo.aspx");
+    }
+
+
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+        SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["JoshuaDB"].ConnectionString);
+        cn.Open();
+        SqlCommand cmd = new SqlCommand("UPDATE Bulletin SET [TopPost] = 0 WHERE (TopPost=1) ", cn);
+        cmd.ExecuteNonQuery();
+
+        SqlDataAdapter da = new SqlDataAdapter(
+   "select * from Bulletin order by Date ASC", WebConfigurationManager.ConnectionStrings
+  ["JoshuaDB"].ConnectionString);
+
+        //        SqlDataAdapter da = new SqlDataAdapter(
+        //"select * from Bulletin order by Convert(char(19),Date,120) DESC", WebConfigurationManager.ConnectionStrings
+        //["JoshuaDB"].ConnectionString);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+        ListView1.DataSource = dt;
+        ListView1.DataBind();
+        //Select * From News order by Convert(datetime,日期) desc
+        //Response.Redirect("~/Default_withViewColumn.aspx");
+    }
+
+
+
+
+    protected void FileButton_Click(object sender, EventArgs e)
+    {
+        FileUpload FileUpload1 = new FileUpload();
+
+        //if (UploadEmployeePhoto(FileUpload1.FileBytes, Request.QueryString["id"]) > 0)
+        //{
+        //    Label1.Text = "上傳成功!!";
+        //    Image1.Visible = true;
+        //    Image1.ImageUrl = "~/EmployeePhoto.aspx?id=" + Request.QueryString["id"];
+        //}
+        //else
+        //{
+        //    Label1.Text = "上傳失敗!!";
+        //}
+        //                else
+        //{
+        //    Label1.Text = "請選擇要上傳的檔案!!";
+        //}
+    }
+
+    //int UploadEmployeePhoto(byte[] data, string Id)
+    //{
+
+    //    SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["JoshuaDB"].ConnectionString);
+    //    SqlCommand cmd = new SqlCommand("Update Bulletin Set FileUpload = @FileUpload Where Id = @Id", cn);
+    //    cmd.Parameters.AddWithValue("@FileUpload", data);
+    //    cmd.Parameters.AddWithValue("@Id", Id);
+
+    //    cn.Open();
+    //    int affected = cmd.ExecuteNonQuery();
+    //    cn.Close();
+
+    //    return affected;
+    //}
+
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+
+    <title></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+</head>
+
+
+<body>
+
+
+    <h1>[公佈欄]</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md12 page-header text-center">
+
+                <button class="btn2">
+                    顯示查詢<i class="far fa-plus-square"></i>
+                </button>
+                <button class="btn1">
+                    收回<i class="far fa-minus-square"></i>
+                </button>
+                <%--<button class="btn2">顯示查詢</button>--%>
+                <%--<button class="btn1">收回</button>--%>
+            </div>
+        </div>
+
+        <form class="form-horizontal" id="Search">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="account">標題</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" name="account" id="title" placeholder="請輸入關鍵字" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="account">內文</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" name="account" id="content" placeholder="請輸入關鍵字" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="nationality">發佈單位</label>
+                <div class="col-md-8">
+                    <select name="nationality" id="category" class="form-control">
+                        <option>---</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+
+                    <%--                    <div onclick="aa()">
+                        <input type="button" value="查詢" class="btn btn-primary" />
+                        <i class="fas fa-search"></i>
+                    </div>--%>
+
+                    <button class="btn btn-warning" type="reset" onclick="aa()">
+                        查詢<i class="fas fa-search"></i>
+                    </button>
+
+
+
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <form id="form1" runat="server">
+        <div>
+            <br />
+            <asp:ListView ID="ListView1" runat="server" DataKeyNames="Id" OnItemDeleting="ListView1_ItemDeleting" OnItemCommand="ListView1_ItemCommand" OnItemUpdating="ListView1_ItemUpdating1" OnItemEditing="ListView1_ItemEditing">
+
+                <EditItemTemplate>
+                    <tr style="background-color: #999999;">
+                        <td>
+                            <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />
+                            <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
+
+                        </td>
+                        <%--                        <td>
+                            <asp:Label ID="IdLabel1" runat="server" Text='<%# Eval("Id") %>' />
+                        </td>--%>
+                        <td>
+                            <asp:TextBox ID="TitleTextBox" runat="server" Text='<%# Bind("Title") %>' />
+                        </td>
+                        <td>
+                            <asp:TextBox ID="DescriptionTextBox" runat="server" Text='<%# Bind("Description") %>' />
+                        </td>
+                        <td>
+                            <asp:TextBox ID="CategoryTextBox" runat="server" Text='<%# Bind("Category") %>' />
+                        </td>
+
+                    </tr>
+                </EditItemTemplate>
+                <AlternatingItemTemplate>
+                    <tr style="background-color: #FFFFFF; color: #284775;">
+                        <td>
+                            <%--                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />--%>
+
+                            <%--                        </td>
+                        <td>
+                            <asp:Label ID="IdLabel" runat="server" Text='<%# Eval("Id") %>' />
+                        </td>--%>
+                            <asp:ImageButton ID="imgBtnEdit" CommandName="Edit" ToolTip="Edit a record." CommandArgument='<%#Eval("Id") %>' runat="server" ImageUrl="edit.png" />
+                            <asp:ImageButton ToolTip="Delete a record." OnClientClick="javascript:return confirm('Are you sure to delete record?')" CommandName="Delete" ID="imgBtnDelete" CommandArgument='<%#Eval("Id") %>' runat="server" ImageUrl="delete.png"></asp:ImageButton>
+
+                            <td>
+                                <asp:HyperLink ID="HyperLink1" runat="server" ForeColor='<%#(Eval("TopPost").ToString()=="1"?System.Drawing.Color.Red:System.Drawing.ColorTranslator.FromHtml("#284775")) %>' NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'>
+                                <%#Eval("TopPost").ToString()=="1"?"[置頂] ":""%><%# Eval("Title") %>
+                                </asp:HyperLink>
+                            </td>
+<%--                            <td>
+                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                            </td>--%>
+                            <td>
+                                <asp:Label ID="CategoryLabel1" runat="server" Text='<%# Eval("Category") %>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="ViewLabel1" runat="server" Text='<%# Eval("View") %>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                            </td>
+                            <td>
+
+                                <asp:FileUpload ID="FileUpload1" runat="server" Width="430px" />
+                                <asp:Button ID="Button1" runat="server" OnClick="FileButton_Click" Text="上傳" />
+
+
+                            </td>
+                            <td>
+                                <asp:Label ID="DownloadLabel" runat="server" Text='<%# Eval("Download") %>' />
+
+                            </td>
+                    </tr>
+
+                </AlternatingItemTemplate>
+                <ItemTemplate>
+                    <tr style="background-color: #E0FFFF; color: #333333;">
+                        <td>
+                            <%--                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />--%>
+                            <asp:ImageButton ID="imgBtnEdit" CommandName="Edit" ToolTip="Edit a record." CommandArgument='<%#Eval("Id") %>' runat="server" ImageUrl="edit.png" />
+                            <asp:ImageButton ToolTip="Delete a record." OnClientClick="javascript:return confirm('Are you sure to delete record?')" CommandName="Delete" ID="imgBtnDelete" CommandArgument='<%#Eval("Id") %>' runat="server" ImageUrl="delete.png"></asp:ImageButton>
+
+                        </td>
+
+                        <%--                        <td>
+                            <asp:Label ID="IdLabel" runat="server" Text='<%# Eval("Id") %>' />
+                        </td>--%>
+                        <td>
+
+                            <asp:HyperLink ID="HyperLink1" runat="server" ForeColor='<%#(Eval("TopPost").ToString()=="1"?System.Drawing.Color.Red:System.Drawing.ColorTranslator.FromHtml("#284775")) %>' NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'>
+                                <%#Eval("TopPost").ToString()=="1"?"[置頂] ":""%><%# Eval("Title") %>
+                            </asp:HyperLink>
+                        </td>
+<%--                        <td>
+                            <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                        </td>--%>
+                        <td>
+                            <asp:Label ID="CategoryLabel" runat="server" Text='<%# Eval("Category") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="ViewLabel" runat="server" Text='<%# Eval("View") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                        </td>
+                        <td>
+                            <asp:FileUpload ID="FileUpload1" runat="server" Width="430px" />
+                            <asp:Button ID="Button1" runat="server" OnClick="FileButton_Click" Text="上傳" />
+                        </td>
+                        <td>
+                            <asp:Label ID="DownloadLabel" runat="server" Text='<%# Eval("Download") %>' />
+                        </td>
+                    </tr>
+                </ItemTemplate>
+                <LayoutTemplate>
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8 categories row">
+                        <table runat="server">
+                            <tr runat="server">
+                                <td runat="server">
+                                    <%--<table id="itemPlaceholderContainer" runat="server" border="1" style="background-color: #FFFFFF; border-collapse: collapse; border-color: #999999; border-style: none; border-width: 1px; font-family: Verdana, Arial, Helvetica, sans-serif;">--%>
+                                    <table id="Table1" runat="server" class="row text-center">
+                                        <tr runat="server" style="background-color: #5D7B9D; color: #ffffff;">
+                                            <th runat="server"></th>
+                                            <%--   <th runat="server">Id</th>--%>
+                                            <th runat="server">文章標題</th>
+                                            <%--<th runat="server">內文</th>--%>
+                                            <th runat="server">發佈單位(類別)</th>
+                                            <th runat="server">文章點閱</th>
+                                            <th runat="server">發佈日期</th>
+                                            <th runat="server">上傳檔案</th>
+                                            <th runat="server">下載</th>
+                                        </tr>
+                                        <tr id="itemPlaceholder" runat="server">
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr runat="server">
+                                <td runat="server" style="text-align: center; background-color: #5D7B9D; font-family: Verdana, Arial, Helvetica, sans-serif; color: #FFFFFF">
+                                    <asp:DataPager ID="DataPager1" runat="server" PageSize="15">
+                                        <Fields>
+                                            <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowLastPageButton="True" />
+                                        </Fields>
+                                    </asp:DataPager>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <asp:Button ID="Button1" runat="server" Text="新增公告" OnClick="Button1_Click" />
+
+                        <%--<a href='Edit_yoyo.aspx?id=<%#Eval("Id")%>'>Edit</a>--%>
+                        <%--<a href='Edit_yoyo.aspx?id=10'>新增公告</a>--%>
+                        <%--<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="Edit_yoyo.aspx?Id=2">新增公告</asp:HyperLink>--%>
+                        <asp:Button ID="Button2" runat="server" Text="取消置頂" OnClick="Button2_Click" />
+                    </div>
+                    <div class="col-sm-2"></div>
+
+                </LayoutTemplate>
+                <SelectedItemTemplate>
+                    <tr style="background-color: #E2DED6; font-weight: bold; color: #333333;">
+                        <td>
+                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                        </td>
+                        <td>
+                            <asp:Label ID="IdLabel" runat="server" Text='<%# Eval("Id") %>' />
+                            <%--<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%#"ShowProduct.aspx?Id="&Eval("Id") %>'Text='<%# Eval("Id") %>'></asp:HyperLink>--%>
+                            
+                        </td>
+                        <td>
+                            <%--<asp:Label ID="TitleLabel" runat="server" Text='<%# Eval("Title") %>' />--%>
+                            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'><%# Eval("Title") %></asp:HyperLink>
+                        </td>
+                        <td>
+                            <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="CategoryLabel" runat="server" Text='<%# Eval("Category") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="ViewLabel" runat="server" Text='<%# Eval("View") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                        </td>
+                    </tr>
+                </SelectedItemTemplate>
+            </asp:ListView>
+        </div>
+    </form>
+
+    <script src="Scripts/jquery-1.9.1.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+    <script> 
+
+
+        $("#Search").slideUp();
+
+        function aa() {
+            var str = "";
+            var title = document.getElementById('title').value;
+            var content = document.getElementById('content').value;
+            var category = document.getElementById('category').value;
+            if (title != "") {
+                str += "title=" + title + "&";
+            }
+            if (content != "") {
+                str += "content=" + content + "&";
+            }
+            if (category != "---") {
+                str += "category=" + category + "&";
+            }
+            str = str.substring(0, str.lastIndexOf('&'));
+            if (str != "") {
+                window.location.href = "/Default_withViewColumn_2.aspx?" + str;
+            }
+
+        }
+
+
+        function F_Open_dialog() {
+            document.getElementById("btn_file").click();
+            var filename = $('#id-input-file-2').val();
+
+            if (filename == "" || filename == null) {
+                alert('Error');
+            } else {
+                var file = document.getElementById('id-input-file-2').files[0];
+                var filename = document.getElementById('id-input-file-2').files[0].name;
+                var blob = new Blob([file]);
+                var url = URL.createObjectURL(blob);
+
+                $(this).attr({ 'download': filename, 'href': url });
+                filename = "";
+            }
+
+        }
+
+
+        //function bb() {
+        //     $("Search").show();
+        //    $("Search").slideDown(1000);
+        //}
+
+        //$("#Button1").click(function () {
+        //    $("#Search").slideDown("slow");
+        //    //$("#Search").slideToggle(10000,callback);
+        //});
+
+
+        $(document).ready(function () {
+            $(".btn1").click(function () {
+                $("#Search").slideUp(1000, function () {
+                    //alert("slideUp()方法已完成!");
+                });
+            });
+            $(".btn2").click(function () {
+                $("#Search").slideDown(1000, function () {
+                    //alert("slideDown()方法已完成!");
+                });
+            });
+        });
+
+    </script>
+
+</body>
+</html>

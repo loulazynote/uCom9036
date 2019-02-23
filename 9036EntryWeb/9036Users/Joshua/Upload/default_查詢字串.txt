@@ -1,0 +1,403 @@
+<%@ Page Language="C#" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Web.Configuration" %>
+
+
+
+<!DOCTYPE html>
+
+<script runat="server"> 
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        BindListView();
+    }
+    private void BindListView()
+    {
+        SqlDataAdapter da = new SqlDataAdapter(
+       "select * from Bulletin ", WebConfigurationManager.ConnectionStrings
+      ["JoshuaDB"].ConnectionString);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+        ListView1.DataSource = dt;
+        ListView1.DataBind();
+
+        //query string
+        string title = Request.QueryString["title"];
+        string content = Request.QueryString["content"];
+        string category = Request.QueryString["category"];
+        //Response.Write(title + content + category);
+
+        //select * from Bulletin where 1 and title like ' %ABC% 
+        string sqlCondition = "";
+        //if (title != null)
+        //{
+        //    sqlCondition += " AND title like '%" + title + "%'";
+        //}
+        if (content != null)
+        {
+            sqlCondition += " AND description like '%" + content + "%'";
+        }
+        if (category != null)
+        {
+            sqlCondition += " AND category ='" + category + "'";
+        }
+
+        //Response.Write(sqlCondition);
+
+        //        SqlDataAdapter da2 = new SqlDataAdapter(
+        //"select * from Bulletin WHERE 1=1" + sqlCondition, WebConfigurationManager.ConnectionStrings
+        //["JoshuaDB"].ConnectionString);
+
+        var sql = "select * from Bulletin WHERE 1=1" + sqlCondition;
+
+        SqlDataAdapter da2 = new SqlDataAdapter(
+sql, WebConfigurationManager.ConnectionStrings
+["JoshuaDB"].ConnectionString);
+
+        //Response.Write(sql);
+
+        DataTable dt2 = new DataTable();
+        da2.Fill(dt2);
+        ListView1.DataSource = dt2;
+        ListView1.DataBind();
+
+
+
+
+
+
+    }
+
+    protected void ListView1_ItemDeleting(object sender, ListViewDeleteEventArgs e)
+    {
+        //Response.Write(e.Keys[0].ToString());
+        int id = (int)e.Keys[0];
+        SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["JoshuaDB"].ConnectionString);
+        SqlCommand cmd = new SqlCommand("DELETE FROM Bulletin WHERE (Id = @Id)", cn);
+        cmd.Parameters.AddWithValue("@Id", id);
+        cn.Open();
+        cmd.ExecuteNonQuery();
+        cn.Close();
+        Response.Redirect("~/Default.aspx");
+    }
+
+    public List<string> GetTitleFromDB(String keyWord)
+    {
+        List<string> myList = new List<string>();
+
+        var db = new JDatabaseEntities();
+        var result = from b in db.Bulletins
+                     where b.Title.Contains(keyWord)
+                     select b;
+
+        var titleAry = result.Select(b => b.Title).ToArray();
+        var x = string.Join(",", titleAry);
+        //var unitPriceAry = result.Select(b => b.UnitPrice).ToArray();
+        //var y = string.Join(",", unitPriceAry);
+        myList.Add(x);
+        //myList.Add(y);
+
+        return myList;
+
+    }
+
+
+
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <h2>公佈欄</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md12 page-header text-center">
+                        <h2>文章查詢</h2>
+                    </div>
+                </div>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="account">標題關鍵字</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="account" id="title" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="account">內文關鍵字</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="account" id="content" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="nationality">發佈單位</label>
+                        <div class="col-md-8">
+                            <select name="nationality" id="category" class="form-control">
+                                <option>---</option>
+                                <option>A</option>
+                                <option>B</option>
+                                <option>C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10 col-md-offset-2">
+                            <input type="button" value="查詢" class="btn btn-primary" onclick="aa()" />
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <script src="Scripts/jquery-3.3.1.js"></script>
+            <script src="Scripts/bootstrap.js"></script>
+
+            <script>    
+                function aa() {
+                    var str = "";
+                    var title = document.getElementById('title').value;
+                    var content = document.getElementById('content').value;
+                    var category = document.getElementById('category').value;
+                    if (title != "") {
+                        str += "title=" + title + "&";
+                    }
+                    if (content != "") {
+                        str += "content=" + content + "&";
+                    }
+                    if (category != "---") {
+                        str += "category=" + category + "&";
+                    }
+                    str = str.substring(0, str.lastIndexOf('&'));
+                    window.location.href = "/Default_withViewColumn.aspx?" + str;  //title= &title= &category=
+                }
+            </script>
+
+
+            <p>
+                Title:<asp:DropDownList ID="DropDownList1" runat="server" DataSourceID="SqlDataSource1" DataTextField="Title" DataValueField="Title" AutoPostBack="True">
+                </asp:DropDownList>
+                <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [Title] FROM [Bulletin]"></asp:SqlDataSource>
+            </p>
+
+            <%--<a href="Edit.aspx?Mode=Insert">新增</a>--%>
+            <a href="Edit_yoyo.aspx?Mode=Insert">新增公告</a>
+            <br />
+            <br />
+            <asp:ListView ID="ListView1" runat="server" DataKeyNames="Id" OnItemDeleting="ListView1_ItemDeleting">
+                <%--          <EmptyDataTemplate> 
+            <table runat="server" style=""> 
+              <tr> 
+                <td>No data was returned.</td> 
+              </tr> 
+            </table> 
+          </EmptyDataTemplate> --%>
+                <AlternatingItemTemplate>
+                    <tr style="background-color: #FFFFFF; color: #284775;">
+                        <td>
+                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                            <%--                        </td>
+                        <td>
+                            <asp:Label ID="IdLabel" runat="server" Text='<%# Eval("Id") %>' />
+                        </td>--%>
+                            <td>
+                                <%--<asp:Label ID="TitleLabel" runat="server" Text='<%# Eval("Title") %>' />--%>
+                                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'><%# Eval("Title") %></asp:HyperLink>
+                                <%--<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl='<%# Eval("Id", "~/ShowProduct.aspx?Id={0}") %>'><%# Eval("Title") %></asp:HyperLink>--%>
+                            </td>
+                            <td>
+                                <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="CategoryLabel1" runat="server" Text='<%# Eval("Category") %>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="ViewLabel1" runat="server" Text='<%# Eval("View") %>' />
+                            </td>
+                    </tr>
+                </AlternatingItemTemplate>
+                <EditItemTemplate>
+                    <tr style="background-color: #999999;">
+                        <td>
+                            <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />
+                            <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
+                        </td>
+                        <%--                        <td>
+                            <asp:Label ID="IdLabel1" runat="server" Text='<%# Eval("Id") %>' />
+                        </td>--%>
+                        <td>
+                            <asp:TextBox ID="TitleTextBox" runat="server" Text='<%# Bind("Title") %>' />
+                        </td>
+                        <td>
+                            <asp:TextBox ID="DateTextBox" runat="server" Text='<%# Bind("Date") %>' />
+                        </td>
+                        <td>
+                            <asp:TextBox ID="DescriptionTextBox" runat="server" Text='<%# Bind("Description") %>' />
+                        </td>
+                        <td>
+                            <asp:TextBox ID="CategoryTextBox" runat="server" Text='<%# Bind("Category") %>' />
+                        </td>
+                        <td>
+                            <asp:TextBox ID="ViewTextBox" runat="server" Text='<%# Bind("View") %>' />
+                        </td>
+                    </tr>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <tr style="background-color: #E0FFFF; color: #333333;">
+                        <td>
+                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                        </td>
+
+                        <%--                        <td>
+                            <asp:Label ID="IdLabel" runat="server" Text='<%# Eval("Id") %>' />
+                        </td>--%>
+                        <td>
+                            <%--<asp:Label ID="TitleLabel" runat="server" Text='<%# Eval("Title") %>' />--%>
+                            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'><%# Eval("Title") %></asp:HyperLink>
+                        </td>
+                        <td>
+                            <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="CategoryLabel" runat="server" Text='<%# Eval("Category") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="ViewLabel" runat="server" Text='<%# Eval("View") %>' />
+                        </td>
+                    </tr>
+                </ItemTemplate>
+                <LayoutTemplate>
+                    <table runat="server">
+                        <tr runat="server">
+                            <td runat="server">
+                                <table id="itemPlaceholderContainer" runat="server" border="1" style="background-color: #FFFFFF; border-collapse: collapse; border-color: #999999; border-style: none; border-width: 1px; font-family: Verdana, Arial, Helvetica, sans-serif;">
+                                    <tr runat="server" style="background-color: #E0FFFF; color: #333333;">
+                                        <th runat="server"></th>
+                                        <%--   <th runat="server">Id</th>--%>
+                                        <th runat="server">Title</th>
+                                        <th runat="server">Date</th>
+                                        <th runat="server">Description</th>
+                                        <th runat="server">Category</th>
+                                        <th runat="server">View</th>
+                                    </tr>
+                                    <tr id="itemPlaceholder" runat="server">
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr runat="server">
+                            <td runat="server" style="text-align: center; background-color: #5D7B9D; font-family: Verdana, Arial, Helvetica, sans-serif; color: #FFFFFF">
+                                <asp:DataPager ID="DataPager1" runat="server">
+                                    <Fields>
+                                        <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowLastPageButton="True" />
+                                    </Fields>
+                                </asp:DataPager>
+                            </td>
+                        </tr>
+                    </table>
+                </LayoutTemplate>
+                <SelectedItemTemplate>
+                    <tr style="background-color: #E2DED6; font-weight: bold; color: #333333;">
+                        <td>
+                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                        </td>
+                        <td>
+                            <asp:Label ID="IdLabel" runat="server" Text='<%# Eval("Id") %>' />
+                            <%--<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%#"ShowProduct.aspx?Id="&Eval("Id") %>'Text='<%# Eval("Id") %>'></asp:HyperLink>--%>
+                            
+                        </td>
+                        <td>
+                            <%--<asp:Label ID="TitleLabel" runat="server" Text='<%# Eval("Title") %>' />--%>
+                            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'><%# Eval("Title") %></asp:HyperLink>
+                        </td>
+                        <td>
+                            <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="CategoryLabel" runat="server" Text='<%# Eval("Category") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="ViewLabel" runat="server" Text='<%# Eval("View") %>' />
+                        </td>
+                    </tr>
+                </SelectedItemTemplate>
+            </asp:ListView>
+
+            <br />
+            <br />
+            <asp:ListView ID="ListView2" runat="server" DataSourceID="SqlDataSource2">
+
+                <ItemTemplate>
+                    <tr style="">
+                        <td>
+                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete" />
+                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
+                        </td>
+                        <td>
+                            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("Id", "~/ShowTitle.aspx?Id={0}") %>'><%# Eval("Title") %></asp:HyperLink>
+                        </td>
+                        <td>
+                            <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="DescriptionLabel" runat="server" Text='<%# Eval("Description") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="CategoryLabel" runat="server" Text='<%# Eval("Category") %>' />
+                        </td>
+                        <td>
+                            <asp:Label ID="ViewLabel" runat="server" Text='<%# Eval("View") %>' />
+                        </td>
+                    </tr>
+                </ItemTemplate>
+                <LayoutTemplate>
+                    <table runat="server">
+                        <tr runat="server">
+                            <td runat="server">
+                                <table id="itemPlaceholderContainer" runat="server" border="0" style="">
+                                    <tr runat="server" style="">
+                                        <th runat="server">Title</th>
+                                        <th runat="server">Date</th>
+                                        <th runat="server">Description</th>
+                                        <th runat="server">Category</th>
+                                        <th runat="server">View</th>
+                                    </tr>
+                                    <tr id="itemPlaceholder" runat="server">
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr runat="server">
+                            <td runat="server" style=""></td>
+                        </tr>
+                    </table>
+                </LayoutTemplate>
+
+            </asp:ListView>
+            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT [Id], [Title], [Date], [Description], [Category], [View] FROM [Bulletin] WHERE ([Title] = @Title)">
+                <SelectParameters>
+                    <asp:ControlParameter ControlID="DropDownList1" Name="Title" PropertyName="SelectedValue" Type="String" />
+                </SelectParameters>
+            </asp:SqlDataSource>
+
+        </div>
+    </form>
+</body>
+</html>

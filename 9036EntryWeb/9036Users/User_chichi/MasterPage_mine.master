@@ -1,0 +1,68 @@
+﻿<%@ Master Language="C#" %>
+
+<!DOCTYPE html>
+
+<script runat="server">
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        labelUser.Text ="歡迎參與者:"+ HttpContext.Current.User.Identity.Name;
+    }
+</script>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="/User_chichi/Content/bootstrap.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+        body{
+            margin:0 auto;
+            /*width:1400px;*/
+        }
+        #Menu1{
+           /*margin-left:200px;*/
+           float:left;
+        }
+
+        #labelUser{
+            
+            width:300px;
+            height:40px;
+            margin-left:1250px;
+            bottom:100px;
+            float:right;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <%--form tag 必須有，否則 Navigator 無法傳遞至其他網頁--%>
+     <form id="form1" runat="server">
+         <%--Navigator 導覽連結--%> 
+        <asp:Menu ID="Menu1" runat="server" BackColor="#DDDDDD" DataSourceID="SiteMapDataSource1" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="2em" ForeColor="#990000" Orientation="Horizontal" StaticDisplayLevels="2" StaticSubMenuIndent="10px" CssClass="Navigateor" Height="50" Width="100%">
+            <DynamicHoverStyle BackColor="#DDDDDD" ForeColor="White" />
+            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <DynamicMenuStyle BackColor="#FFFBD6" />
+            <DynamicSelectedStyle BackColor="#DDDDDD" />
+            <StaticHoverStyle BackColor="#990000" ForeColor="White" />
+            <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <StaticSelectedStyle BackColor="#DDDDDD" />
+        </asp:Menu>   
+            <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />
+
+         <asp:Label ID="labelUser" runat="server" Text=""></asp:Label>
+
+        <div>
+            <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+                <%--分頁處理--%>
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <script src="/User_chichi/Scripts/jquery-3.1.1.js"></script>
+    <script src="/User_chichi/Scripts/bootstrap.js"></script>
+    <script src="/User_chichi/Scripts/jquery.timelify.js"></script>
+</body>
+</html>
